@@ -6,11 +6,7 @@ module.exports = {
     sourceType: 'module'
   },
   plugins: ['@typescript-eslint/eslint-plugin', 'unused-imports', 'import'],
-  extends: [
-    'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended',
-    'plugin:import/recommended'
-  ],
+  extends: ['plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended', 'plugin:import/recommended'],
   root: true,
   env: {
     node: true,
@@ -26,7 +22,7 @@ module.exports = {
     'computed-property-spacing': ['error', 'never'],
     'brace-style': 'error',
     'no-irregular-whitespace': 'error',
-    indent: ['error', 2],
+    indent: ['off', 2],
     'comma-dangle': ['error', 'never'],
     semi: ['error', 'never'],
     'no-console': ['warn', { allow: ['warn', 'error'] }],
@@ -44,16 +40,7 @@ module.exports = {
     'import/order': [
       'error',
       {
-        groups: [
-          'type',
-          'builtin',
-          'object',
-          'external',
-          'internal',
-          'parent',
-          'sibling',
-          'index'
-        ],
+        groups: ['type', 'builtin', 'object', 'external', 'internal', 'parent', 'sibling', 'index'],
         pathGroups: [
           {
             pattern: '~/**',

@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common'
-import { TypeOrmModule } from '@nestjs/typeorm'
-import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ConfigModule } from '@nestjs/config'
 
 import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { DatabaseModule } from './database/database.module'
+import { AuthModule } from './auth/auth.module'
 
 @Module({
-  imports: [DatabaseModule, ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' })],
+  imports: [DatabaseModule, ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }), AuthModule],
   controllers: [AppController],
   providers: [AppService]
 })

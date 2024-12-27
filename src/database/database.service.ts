@@ -1,9 +1,14 @@
 import { readdirSync, readFileSync, statSync } from 'fs'
 import { join } from 'path'
 
-import { Injectable, OnModuleInit } from '@nestjs/common'
+import { Injectable, OnModuleInit, ServiceUnavailableException } from '@nestjs/common'
 import { DataSource } from 'typeorm'
 import { ConfigService } from '@nestjs/config'
+
+interface IParamWithTypes {
+  [key: string]: string | number | boolean
+  useQuote?: boolean
+}
 
 @Injectable()
 export class DatabaseService implements OnModuleInit {
@@ -57,5 +62,38 @@ export class DatabaseService implements OnModuleInit {
     }
 
     return files
+  }
+
+  public async exeProc(procName: string, params: IParamWithTypes[], output?: string) {
+    const formattedParams = params
+      .map((param) => {
+        const { useQuote, ...rest } = param
+
+        if (useQuote) {
+          return Object.entries(rest)
+            .map(([key, value]) => `@${key} = N'${value}'`)
+            .join(', ')
+        } else {
+          return Object.entries(rest)
+            .map(([key, value]) => `@${key} = ${value}`)
+            .join(', ')
+        }
+      })
+      .join(', ')
+
+    const formattedOutput = output ? `, @${output} = @${output} OUTPUT;\nSELECT @${output};` : ''
+    const declareOutput = output ? `DECLARE @${output} NVARCHAR(255);\n` : ''
+
+    const query = `${declareOutput}EXEC ${procName} ${formattedParams}${output ? formattedOutput : ''}`
+
+    try {
+      const data = Object.values((await this.dataSource.query(query))[0])[0]
+
+      return data ? data : { message: 'OK' }
+    } catch (err) {
+      const errorMessage = err.originalError?.message || 'Unknown database error'
+
+      throw new ServiceUnavailableException(errorMessage)
+    }
   }
 }
