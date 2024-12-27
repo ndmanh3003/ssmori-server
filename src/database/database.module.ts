@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import * as mssql from 'mssql'
 
+import { DatabaseService } from './database.service'
+
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -35,7 +37,7 @@ import * as mssql from 'mssql'
           password: configService.get('DB_PASSWORD'),
           database: configService.get('DB_NAME'),
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
-          synchronize: true,
+          synchronize: false,
           options: {
             encrypt: true,
             trustServerCertificate: true
@@ -43,6 +45,8 @@ import * as mssql from 'mssql'
         }
       }
     })
-  ]
+  ],
+  providers: [DatabaseService],
+  exports: [DatabaseService]
 })
 export class DatabaseModule {}
