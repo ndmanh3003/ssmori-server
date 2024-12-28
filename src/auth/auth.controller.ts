@@ -10,4 +10,14 @@ export class AuthController {
   async sendOtp(@Body() reqBody) {
     return this.authService.sendOtp(reqBody)
   }
+
+  @Post('register')
+  async register(@Body() reqBody) {
+    return this.authService.register(reqBody)
+  }
+
+  @Post('login')
+  async login(@Body() reqBody) {
+    return this.authService.login(reqBody)
+  }
 }

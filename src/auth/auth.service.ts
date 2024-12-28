@@ -1,33 +1,40 @@
 import { Injectable } from '@nestjs/common'
-import * as nodemailer from 'nodemailer'
 import { DatabaseService } from 'src/database/database.service'
+
+import { MailService } from './mail.service'
+import { TokenService } from './token.service'
 
 @Injectable()
 export class AuthService {
-  constructor(private dbSv: DatabaseService) {}
+  constructor(
+    private dbSv: DatabaseService,
+    private mailService: MailService,
+    private tokenService: TokenService
+  ) {}
 
   async sendOtp(reqBody) {
     const { phone, type } = reqBody
 
     const res = await this.dbSv.exeProc('sp_SendOtp', [{ phone, type, useQuote: true }], 'otp')
 
-    const transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: process.env.MAIL_USER,
-        pass: process.env.MAIL_PASS
-      }
-    })
-
-    const mailOptions = {
-      from: process.env.MAIL_USER,
-      to: process.env.MAIL_USER,
-      subject: 'SushiMori - OTP',
-      text: res
-    }
-
-    transporter.sendMail(mailOptions)
+    await this.mailService.mail(res as string)
 
     return { message: 'OK' }
+  }
+
+  async register(reqBody) {
+    const { otp, name, phone, email, gender } = reqBody
+
+    const res = await this.dbSv.exeProc('sp_Register', [{ otp, name, phone, email, gender, useQuote: true }], 'id')
+
+    return { data: this.tokenService.generateToken({ id: res, type: 'C' }) }
+  }
+
+  async login(reqBody) {
+    const { phone, otp, type } = reqBody
+
+    const res = await this.dbSv.exeProc('sp_Login', [{ phone, otp, type, useQuote: true }], 'id')
+
+    return { data: this.tokenService.generateToken({ id: res, type }) }
   }
 }

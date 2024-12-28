@@ -22,13 +22,15 @@ export class DatabaseService implements OnModuleInit {
   sufix = ['data\\manual.sql']
 
   async onModuleInit() {
-    const sqlFiles = this.getAllSqlFiles(this.dir)
+    if (+this.ConfigService.get('DB_MIGRATE') === 1) {
+      const sqlFiles = this.getAllSqlFiles(this.dir)
 
-    sqlFiles.unshift(...this.pre.map((file) => join(this.dir, file)))
-    sqlFiles.push(...this.sufix.map((file) => join(this.dir, file)))
+      sqlFiles.unshift(...this.pre.map((file) => join(this.dir, file)))
+      sqlFiles.push(...this.sufix.map((file) => join(this.dir, file)))
 
-    for (const sqlFile of sqlFiles) {
-      await this.executeSqlScript(sqlFile)
+      for (const sqlFile of sqlFiles) {
+        await this.executeSqlScript(sqlFile)
+      }
     }
   }
 
