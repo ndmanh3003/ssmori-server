@@ -32,7 +32,8 @@ module.exports = {
       {
         args: 'after-used',
         ignoreRestSiblings: false,
-        argsIgnorePattern: '^_.*?$'
+        varsIgnorePattern: '^_',
+        argsIgnorePattern: '^_'
       }
     ],
     'unused-imports/no-unused-imports': 'warn',

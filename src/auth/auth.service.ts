@@ -37,4 +37,8 @@ export class AuthService {
 
     return { data: this.tokenService.generateToken({ id: res, type }) }
   }
+
+  async getme() {
+    return { message: 'OK' }
+  }
 }
