@@ -4,7 +4,7 @@ import { TokenService } from 'src/auth/token.service'
 
 export interface IUser {
   id: number
-  roles: 'C' | 'B' | 'S'
+  type: 'C' | 'B' | 'S'
 }
 
 @Injectable()

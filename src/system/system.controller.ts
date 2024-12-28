@@ -11,37 +11,37 @@ export class SystemController {
   constructor(private readonly systemService: SystemService) {}
 
   @Post('region')
-  async createRegion(@Body() data) {
-    return await this.systemService.createRegion(data)
+  async createRegion(@Body() body) {
+    return await this.systemService.createRegion(body)
   }
 
   @Put('region')
-  async updateRegion(@Body() data) {
-    return await this.systemService.updateRegion(data)
+  async updateRegion(@Body() body) {
+    return await this.systemService.updateRegion(body)
   }
 
   @Delete('region')
-  async deleteRegion(@Body() data) {
-    return await this.systemService.deleteRegion(data)
+  async deleteRegion(@Body() body) {
+    return await this.systemService.deleteRegion(body)
   }
 
   @Post('branch')
-  async createBranch(@Body() data) {
-    return await this.systemService.createBranch(data)
+  async createBranch(@Body() body) {
+    return await this.systemService.createBranch(body)
   }
 
   @Put('branch')
-  async updateBranch(@Body() data) {
-    return await this.systemService.updateBranch(data)
+  async updateBranch(@Body() body) {
+    return await this.systemService.updateBranch(body)
   }
 
   @Delete('branch')
-  async deleteBranch(@Body() data) {
-    return await this.systemService.deleteBranch(data)
+  async deleteBranch(@Body() body) {
+    return await this.systemService.deleteBranch(body)
   }
 
   @Put()
-  async updateSystem(@Body() data) {
-    return await this.systemService.updateSystem(data)
+  async updateSystem(@Body() body) {
+    return await this.systemService.updateSystem(body)
   }
 }

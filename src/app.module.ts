@@ -7,10 +7,19 @@ import { DatabaseModule } from './database/database.module'
 import { AuthModule } from './auth/auth.module'
 import { CustomerModule } from './customer/customer.module'
 import { MenuModule } from './menu/menu.module'
-import { SystemModule } from './system/system.module';
+import { SystemModule } from './system/system.module'
+import { OrderModule } from './order/order.module'
 
 @Module({
-  imports: [DatabaseModule, ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }), AuthModule, CustomerModule, MenuModule, SystemModule],
+  imports: [
+    DatabaseModule,
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
+    AuthModule,
+    CustomerModule,
+    MenuModule,
+    SystemModule,
+    OrderModule
+  ],
   controllers: [AppController],
   providers: [AppService]
 })

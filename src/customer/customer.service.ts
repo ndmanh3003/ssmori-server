@@ -9,12 +9,14 @@ export class CustomerService {
     return await this.dbSv.exeProc('sp_CloseCustomerCard', [{ customerId }])
   }
 
-  async openCustomerCard(branchId: number, customerId: number) {
+  async openCustomerCard(branchId: number, data) {
+    const { customerId } = data
+
     return await this.dbSv.exeProc('sp_CreateCustomerCard', [{ branchId, customerId }])
   }
 
-  async updateCustomer(customerId: number, updateData) {
-    const { name, email, gender } = updateData
+  async updateCustomer(customerId: number, data) {
+    const { name, email, gender } = data
 
     return await this.dbSv.exeProc('sp_UpdateCustomer', [{ customerId }, { name, email, gender, useQuote: true }])
   }

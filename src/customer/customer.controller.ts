@@ -19,7 +19,7 @@ export class CustomerController {
   @Post('open-card')
   @UseGuards(new RoleGuard(['B']))
   async openCustomerCard(@User() user: IUser, @Body() body) {
-    return this.customerService.openCustomerCard(user.id, body.customerId)
+    return this.customerService.openCustomerCard(user.id, body)
   }
 
   @Post('update')

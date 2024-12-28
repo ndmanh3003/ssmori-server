@@ -12,61 +12,61 @@ export class MenuController {
 
   @Post('category')
   @UseGuards(new RoleGuard(['S']))
-  async createCategory(@Body() data) {
-    return await this.menuService.createCategory(data)
+  async createCategory(@Body() body) {
+    return await this.menuService.createCategory(body)
   }
 
   @Put('category')
   @UseGuards(new RoleGuard(['S']))
-  async updateCategory(@Body() data) {
-    return await this.menuService.updateCategory(data)
+  async updateCategory(@Body() body) {
+    return await this.menuService.updateCategory(body)
   }
 
   @Delete('category')
   @UseGuards(new RoleGuard(['S']))
-  async deleteCategory(@Body() data) {
-    return await this.menuService.deleteCategory(data)
+  async deleteCategory(@Body() body) {
+    return await this.menuService.deleteCategory(body)
   }
 
   @Post('dish')
   @UseGuards(new RoleGuard(['S']))
-  async createDish(@Body() data) {
-    return await this.menuService.createDish(data)
+  async createDish(@Body() body) {
+    return await this.menuService.createDish(body)
   }
 
   @Put('dish')
   @UseGuards(new RoleGuard(['S']))
-  async updateDish(@Body() data) {
-    return await this.menuService.updateDish(data)
+  async updateDish(@Body() body) {
+    return await this.menuService.updateDish(body)
   }
 
   @Delete('dish')
   @UseGuards(new RoleGuard(['S']))
-  async deleteDish(@Body() data) {
-    return await this.menuService.deleteDish(data)
+  async deleteDish(@Body() body) {
+    return await this.menuService.deleteDish(body)
   }
 
   @Post('region-dish')
   @UseGuards(new RoleGuard(['S']))
-  async manageRegionDishes(@Body() data) {
-    return await this.menuService.manageRegionDishes(data)
+  async manageRegionDishes(@Body() body) {
+    return await this.menuService.manageRegionDishes(body)
   }
 
   @Post('branch-dish')
   @UseGuards(new RoleGuard(['B']))
-  async manageBranchDishes(@User() user: IUser, @Body() data) {
-    return await this.menuService.manageBranchDishes(user.id, data)
+  async manageBranchDishes(@User() user: IUser, @Body() body) {
+    return await this.menuService.manageBranchDishes(user.id, body)
   }
 
   @Post('category-dish')
   @UseGuards(new RoleGuard(['S']))
-  async manageCategoryDishes(@Body() data) {
-    return await this.menuService.manageCategoryDishes(data)
+  async manageCategoryDishes(@Body() body) {
+    return await this.menuService.manageCategoryDishes(body)
   }
 
   @Post('combo-dish')
   @UseGuards(new RoleGuard(['S']))
-  async manageComboDishes(@Body() data) {
-    return await this.menuService.manageComboDishes(data)
+  async manageComboDishes(@Body() body) {
+    return await this.menuService.manageComboDishes(body)
   }
 }

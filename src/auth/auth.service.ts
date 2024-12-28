@@ -12,8 +12,8 @@ export class AuthService {
     private tokenService: TokenService
   ) {}
 
-  async sendOtp(reqBody) {
-    const { phone, type } = reqBody
+  async sendOtp(data) {
+    const { phone, type } = data
 
     const res = await this.dbSv.exeProc('sp_SendOtp', [{ phone, type, useQuote: true }], 'otp')
 
@@ -22,16 +22,16 @@ export class AuthService {
     return { message: 'OK' }
   }
 
-  async register(reqBody) {
-    const { otp, name, phone, email, gender } = reqBody
+  async register(data) {
+    const { otp, name, phone, email, gender } = data
 
     const res = await this.dbSv.exeProc('sp_Register', [{ otp, name, phone, email, gender, useQuote: true }], 'id')
 
     return { data: this.tokenService.generateToken({ id: res, type: 'C' }) }
   }
 
-  async login(reqBody) {
-    const { phone, otp, type } = reqBody
+  async login(data) {
+    const { phone, otp, type } = data
 
     const res = await this.dbSv.exeProc('sp_Login', [{ phone, otp, type, useQuote: true }], 'id')
 
