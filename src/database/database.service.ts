@@ -73,12 +73,12 @@ export class DatabaseService implements OnModuleInit {
 
         if (useQuote) {
           return Object.entries(rest)
-            .filter(([_key, value]) => value)
+            .filter(([_key, value]) => value !== null && value !== undefined)
             .map(([key, value]) => `@${key} = N'${value}'`)
             .join(', ')
         } else {
           return Object.entries(rest)
-            .filter(([_key, value]) => value)
+            .filter(([_key, value]) => value !== null && value !== undefined)
             .map(([key, value]) => `@${key} = ${value}`)
             .join(', ')
         }

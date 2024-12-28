@@ -6,9 +6,10 @@ import { AppService } from './app.service'
 import { DatabaseModule } from './database/database.module'
 import { AuthModule } from './auth/auth.module'
 import { CustomerModule } from './customer/customer.module'
+import { MenuModule } from './menu/menu.module';
 
 @Module({
-  imports: [DatabaseModule, ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }), AuthModule, CustomerModule],
+  imports: [DatabaseModule, ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }), AuthModule, CustomerModule, MenuModule],
   controllers: [AppController],
   providers: [AppService]
 })

@@ -52,7 +52,6 @@ module.exports = {
         'newlines-between': 'always'
       }
     ],
-    'no-warning-comments': 'error',
     'padding-line-between-statements': [
       'warn',
       {
