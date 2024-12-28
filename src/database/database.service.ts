@@ -83,6 +83,7 @@ export class DatabaseService implements OnModuleInit {
             .join(', ')
         }
       })
+      .filter((param) => param.trim() !== '')
       .join(', ')
 
     const formattedOutput = output ? `, @${output} = @${output} OUTPUT;\nSELECT @${output};` : ';'
