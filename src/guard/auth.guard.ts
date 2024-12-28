@@ -2,6 +2,11 @@ import { Injectable, CanActivate, ExecutionContext, ForbiddenException } from '@
 import { Observable } from 'rxjs'
 import { TokenService } from 'src/auth/token.service'
 
+export interface IUser {
+  id: number
+  roles: 'C' | 'B' | 'S'
+}
+
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private tokenService: TokenService) {}
@@ -19,7 +24,7 @@ export class AuthGuard implements CanActivate {
     if (user) {
       const { iat: _iat, exp: _exp, ...rest } = user
 
-      request.user = rest
+      request.user = rest as unknown as IUser
 
       return true
     }

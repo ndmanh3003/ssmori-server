@@ -5,9 +5,10 @@ import { AppController } from './app.controller'
 import { AppService } from './app.service'
 import { DatabaseModule } from './database/database.module'
 import { AuthModule } from './auth/auth.module'
+import { CustomerModule } from './customer/customer.module'
 
 @Module({
-  imports: [DatabaseModule, ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }), AuthModule],
+  imports: [DatabaseModule, ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }), AuthModule, CustomerModule],
   controllers: [AppController],
   providers: [AppService]
 })

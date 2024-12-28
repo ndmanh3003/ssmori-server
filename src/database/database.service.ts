@@ -73,25 +73,31 @@ export class DatabaseService implements OnModuleInit {
 
         if (useQuote) {
           return Object.entries(rest)
+            .filter(([_key, value]) => value)
             .map(([key, value]) => `@${key} = N'${value}'`)
             .join(', ')
         } else {
           return Object.entries(rest)
+            .filter(([_key, value]) => value)
             .map(([key, value]) => `@${key} = ${value}`)
             .join(', ')
         }
       })
       .join(', ')
 
-    const formattedOutput = output ? `, @${output} = @${output} OUTPUT;\nSELECT @${output};` : ''
+    const formattedOutput = output ? `, @${output} = @${output} OUTPUT;\nSELECT @${output};` : ';'
     const declareOutput = output ? `DECLARE @${output} NVARCHAR(255);\n` : ''
 
-    const query = `${declareOutput}EXEC ${procName} ${formattedParams}${output ? formattedOutput : ''}`
+    const query = `${declareOutput}EXEC ${procName} ${formattedParams}${formattedOutput}`
 
     try {
-      const data = Object.values((await this.dataSource.query(query))[0])[0]
+      if (output) {
+        return Object.values((await this.dataSource.query(query))[0])[0]
+      }
 
-      return data ? data : { message: 'OK' }
+      await this.dataSource.query(query)
+
+      return { message: 'OK' }
     } catch (err) {
       const errorMessage = err.originalError?.message || 'Unknown database error'
 
