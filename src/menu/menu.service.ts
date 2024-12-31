@@ -1,9 +1,13 @@
 import { Injectable } from '@nestjs/common'
 import { DatabaseService } from 'src/database/database.service'
+import { SystemService } from 'src/system/system.service'
 
 @Injectable()
 export class MenuService {
-  constructor(private dbSv: DatabaseService) {}
+  constructor(
+    private dbSv: DatabaseService,
+    private readonly systemService: SystemService
+  ) {}
 
   //TODO: Category
   async createCategory(data) {
@@ -72,5 +76,57 @@ export class MenuService {
     const { dishId, comboId, isDelete } = data
 
     return await this.dbSv.exeProc('sp_ManageComboDishes', [{ dishId, comboId, isDelete }])
+  }
+
+  //TODO: View
+  async getDishByDishId(dishId: number) {
+    const dish = (await this.dbSv.exeSelect('Dish', [`id = ${dishId}`]))[0]
+
+    if (dish.isCombo) {
+      dish.dishes = await this.dbSv.exeSelect('ComboDish', [`combo = ${dishId}`])
+
+      dish.dishes = await Promise.all(
+        dish.dishes.map(async (combo) => {
+          const { nameVn, nameEn, id } = await this.getDishByDishId(combo.dish)
+
+          return { nameVn, nameEn, id }
+        })
+      )
+    }
+
+    return dish
+  }
+
+  async getMenu(branchId: number) {
+    return await this.dbSv.exeFunc(`fn_viewMenuByBranchId(${branchId || 'null'})`)
+  }
+
+  async getCombo() {
+    const combos = await this.dbSv.exeSelect('Dish', ['isCombo = 1'])
+
+    return await Promise.all(
+      combos.map(async (combo) => {
+        const { dishes } = await this.getDishByDishId(combo.id)
+
+        return {
+          id: combo.id,
+          name: combo.nameVn,
+          dishes: dishes.map((dish) => dish.id)
+        }
+      })
+    )
+  }
+
+  async getDishdByBranchId(branchId: number) {
+    const regionId = (await this.systemService.getBranchByBranchId(branchId)).id
+
+    const region = await this.getDishByRegionId(regionId)
+    const branch = (await this.dbSv.exeSelect('BranchDish', [`branch = ${branchId}`])).map((dish) => dish.dish)
+
+    return { region, branch }
+  }
+
+  async getDishByRegionId(regionId: number) {
+    return (await this.dbSv.exeSelect('RegionDish', [`region = ${regionId}`])).map((dish) => dish.dish)
   }
 }

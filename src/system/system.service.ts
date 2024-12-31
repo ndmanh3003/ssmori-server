@@ -81,12 +81,8 @@ export class SystemService {
     return await this.dbSv.exeSelect('Region')
   }
 
-  async getBranch() {
-    return await this.dbSv.exeSelect('Branch')
-  }
-
-  async getBranchById(branchId: number) {
-    return await this.dbSv.exeSelect('Branch', [`id = ${branchId}`])
+  async getBranchByBranchId(branchId: number) {
+    return (await this.dbSv.exeSelect('Branch', [`id = ${branchId}`]))[0]
   }
 
   async getSystem() {

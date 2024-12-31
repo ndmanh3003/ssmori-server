@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Post, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Post, SetMetadata, UseGuards } from '@nestjs/common'
 import { AuthGuard, IUser } from 'src/guard/auth.guard'
 import { RoleGuard } from 'src/guard/role.guard'
 import { User } from 'src/decorators/user.decorator'
@@ -62,6 +62,7 @@ export class OrderController {
   }
 
   @Post('review')
+  @SetMetadata('bypassGuards', true)
   async reviewOrder(@Body() body) {
     return await this.orderService.reviewOrder(body)
   }

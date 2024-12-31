@@ -56,14 +56,10 @@ export class SystemController {
     return await this.systemService.getRegion()
   }
 
-  @Get('branch')
-  async getBranch() {
-    return await this.systemService.getBranch()
-  }
-
   @Get('branch/:branchId')
-  async getBranchByRegionId(@Param('branchId') branchId: number) {
-    return await this.systemService.getBranchById(branchId)
+  @SetMetadata('bypassGuards', true)
+  async getBranchByBranchId(@Param('branchId') branchId: number) {
+    return await this.systemService.getBranchByBranchId(branchId)
   }
 
   @Get()
