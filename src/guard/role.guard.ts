@@ -6,6 +6,12 @@ export class RoleGuard implements CanActivate {
   constructor(private role: string[]) {}
 
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+    const bypassGuards = Reflect.getMetadata('bypassGuards', context.getHandler())
+
+    if (bypassGuards) {
+      return true
+    }
+
     const request = context.switchToHttp().getRequest()
 
     if (!this.role.includes(request.user.type)) {

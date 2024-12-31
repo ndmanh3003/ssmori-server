@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common'
 import { DatabaseService } from 'src/database/database.service'
+import { groupBy } from 'src/utils/groupBy'
 
 @Injectable()
 export class SystemService {
@@ -67,5 +68,28 @@ export class SystemService {
       { phone, useQuote: true },
       { costPerKm, freeDistance, shipMemberDiscount, shipSilverDiscount, shipGoldDiscount, dishMemberDiscount, dishSilverDiscount, dishGoldDiscount }
     ])
+  }
+
+  //TODO: View
+  async getRegionBranch() {
+    const res = await this.dbSv.exeFunc('fn_viewRegionBranch()')
+
+    return groupBy(res, 'regionId', ['regionId', 'regionName'], 'branches')
+  }
+
+  async getRegion() {
+    return await this.dbSv.exeSelect('Region')
+  }
+
+  async getBranch() {
+    return await this.dbSv.exeSelect('Branch')
+  }
+
+  async getBranchById(branchId: number) {
+    return await this.dbSv.exeSelect('Branch', [`id = ${branchId}`])
+  }
+
+  async getSystem() {
+    return await this.dbSv.exeSelect('Const')
   }
 }

@@ -20,12 +20,16 @@ export class OrderService {
   }
 
   async createReserveOrder(customerId: number, data) {
-    const { branchId, guestCount, bookingAt, phone } = data
+    const { branchId, guestCount, bookingAt } = data
 
-    return await this.dbSv.exeProc('sp_CreateReserveOrder', [
-      { branchId, guestCount, customerId },
-      { phone, bookingAt, useQuote: true }
-    ])
+    return await this.dbSv.exeProc(
+      'sp_CreateReserveOrder',
+      [
+        { branchId, guestCount, customerId },
+        { bookingAt, useQuote: true }
+      ],
+      'invoiceId'
+    )
   }
 
   async createOffOrder(branchId: number, data) {
@@ -59,12 +63,6 @@ export class OrderService {
     const { invoiceId } = data
 
     return await this.dbSv.exeProc('sp_CancelOrder', [{ invoiceId }])
-  }
-
-  async issueOrder(data) {
-    const { invoiceId } = data
-
-    return await this.dbSv.exeProc('sp_IssueOrder', [{ invoiceId }])
   }
 
   async payOrder(data) {

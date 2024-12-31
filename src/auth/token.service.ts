@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable } from '@nestjs/common'
+import { Injectable, UnauthorizedException } from '@nestjs/common'
 import * as jwt from 'jsonwebtoken'
 
 @Injectable()
@@ -13,7 +13,7 @@ export class TokenService {
     try {
       return jwt.verify(token, process.env.JWT_SECRET)
     } catch (err) {
-      throw new ForbiddenException(err.message)
+      throw new UnauthorizedException(err.message)
     }
   }
 }

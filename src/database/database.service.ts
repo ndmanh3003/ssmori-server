@@ -20,6 +20,7 @@ export class DatabaseService implements OnModuleInit {
   dir = join(process.cwd(), 'src', 'database', `${this.ConfigService.get('DB_NAME')}-migrations`)
   pre = ['init.sql', 'schemas\\tables.sql']
   sufix = ['data\\manual.sql']
+  ignore = Array.from({ length: 4 }, (_, i) => `data\\invoice\\sample\\${i + 1}.sql`)
 
   async onModuleInit() {
     if (+this.ConfigService.get('DB_MIGRATE') === 1) {
@@ -58,7 +59,11 @@ export class DatabaseService implements OnModuleInit {
 
       if (stat.isDirectory()) {
         files.push(...this.getAllSqlFiles(fullPath))
-      } else if (stat.isFile() && entry.endsWith('.sql') && ![...this.pre, ...this.sufix].some((suffix) => fullPath.endsWith(suffix))) {
+      } else if (
+        stat.isFile() &&
+        entry.endsWith('.sql') &&
+        ![...this.pre, ...this.sufix, ...this.ignore].some((suffix) => fullPath.endsWith(suffix))
+      ) {
         files.push(fullPath)
       }
     }
@@ -99,6 +104,25 @@ export class DatabaseService implements OnModuleInit {
       await this.dataSource.query(query)
 
       return { message: 'OK' }
+    } catch (err) {
+      const errorMessage = err.originalError?.message || 'Unknown database error'
+
+      throw new ServiceUnavailableException(errorMessage)
+    }
+  }
+
+  public async exeFunc(tableNameWParam: string) {
+    return this.dataSource.query(`SELECT * FROM ${tableNameWParam}`)
+  }
+
+  public async exeSelect(tableName: string, where?: string[]) {
+    const formattedWhere = where
+      ? where.filter((w) => w && w.trim() !== '' && !w.toLowerCase().includes('undefined') && !w.toLowerCase().includes('null')).join(' AND ')
+      : '1 = 1'
+    const query = `SELECT * FROM ${tableName} WHERE ${formattedWhere}`
+
+    try {
+      return await this.dataSource.query(query)
     } catch (err) {
       const errorMessage = err.originalError?.message || 'Unknown database error'
 

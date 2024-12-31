@@ -55,12 +55,6 @@ export class OrderController {
     return await this.orderService.cancelOrder(body)
   }
 
-  @Post('issue')
-  @UseGuards(new RoleGuard(['B']))
-  async issueOrder(@Body() body) {
-    return await this.orderService.issueOrder(body)
-  }
-
   @Post('pay')
   @UseGuards(new RoleGuard(['B']))
   async payOrder(@Body() body) {
