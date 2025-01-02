@@ -1,5 +1,16 @@
 import { Injectable } from '@nestjs/common'
 import { DatabaseService } from 'src/database/database.service'
+import { groupBy } from 'src/utils/groupBy'
+
+interface IOrderList {
+  status: string
+  from: string
+  customerId: number
+  branchId: number
+  type: string
+  page: number
+  limit: number
+}
 
 @Injectable()
 export class OrderService {
@@ -79,5 +90,52 @@ export class OrderService {
       { invoiceId, service, quality, price, location },
       { comment, useQuote: true }
     ])
+  }
+
+  //TODO: Get order
+  async getHistory(data: IOrderList) {
+    const query = `fn_viewInvoiceList(
+      ${data.status ? `'${data.status}'` : 'null'}, 
+      ${data.from ? `'${data.from}'` : 'null'}, 
+      ${data.customerId || 'null'}, 
+      ${data.branchId || 'null'}, 
+      ${data.type ? `'${data.type}'` : 'null'}, 
+      ${data.page || 1}, 
+      ${data.limit || 5}
+    )`
+
+    return await this.dbSv.exeFunc(query)
+  }
+
+  async getOrderDetail(invoiceId: number, customerId?: number) {
+    const res = await this.dbSv.exeFunc(`fn_viewInvoiceDetail(${invoiceId}, ${customerId || 'null'})`)
+
+    if (res.length === 1) {
+      return res[0]
+    }
+
+    return groupBy(
+      res,
+      'id',
+      [
+        'status',
+        'orderAt',
+        'total',
+        'shipCost',
+        'dishDiscount',
+        'shipDiscount',
+        'totalPayment',
+        'customer',
+        'branch',
+        'type',
+        'guestCount',
+        'bookingAt',
+        'phone',
+        'address',
+        'distanceKm',
+        'branchInfo'
+      ],
+      'dishes'
+    )[0]
   }
 }

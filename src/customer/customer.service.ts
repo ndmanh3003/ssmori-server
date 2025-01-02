@@ -20,4 +20,14 @@ export class CustomerService {
 
     return await this.dbSv.exeProc('sp_UpdateCustomer', [{ customerId }, { name, email, gender, useQuote: true }])
   }
+
+  async getCustomer(customerId: number) {
+    const res = (await this.dbSv.exeSelect('Customer', [`id = ${customerId}`]))[0]
+    const card = (await this.dbSv.exeSelect('Card', [`customer = ${customerId}`, 'isClosed = 0']))[0]
+
+    return {
+      ...res,
+      card: card
+    }
+  }
 }

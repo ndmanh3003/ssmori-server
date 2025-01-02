@@ -27,7 +27,7 @@ export class AuthService {
 
     const res = await this.dbSv.exeProc('sp_Register', [{ otp, name, phone, email, gender, useQuote: true }], 'id')
 
-    return { data: this.tokenService.generateToken({ id: res, type: 'C' }) }
+    return this.tokenService.generateToken({ id: res, type: 'C' })
   }
 
   async login(data) {
@@ -35,7 +35,7 @@ export class AuthService {
 
     const res = await this.dbSv.exeProc('sp_Login', [{ phone, otp, type, useQuote: true }], 'id')
 
-    return { data: this.tokenService.generateToken({ id: res, type }) }
+    return this.tokenService.generateToken({ id: res, type })
   }
 
   async getme() {

@@ -22,6 +22,7 @@ export class AuthGuard implements CanActivate {
     const token = request.headers.authorization
 
     if (!token || !token.startsWith('Bearer ')) {
+      console.log('Token not found')
       throw new UnauthorizedException('Token not found')
     }
 

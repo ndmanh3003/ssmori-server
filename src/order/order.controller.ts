@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Post, SetMetadata, UseGuards } from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Query, SetMetadata, UseGuards } from '@nestjs/common'
 import { AuthGuard, IUser } from 'src/guard/auth.guard'
 import { RoleGuard } from 'src/guard/role.guard'
 import { User } from 'src/decorators/user.decorator'
@@ -24,7 +24,7 @@ export class OrderController {
 
     await this.orderService.submitOrder({ invoiceId })
 
-    return { data: invoiceId }
+    return invoiceId
   }
 
   @Post('reserve')
@@ -65,5 +65,18 @@ export class OrderController {
   @SetMetadata('bypassGuards', true)
   async reviewOrder(@Body() body) {
     return await this.orderService.reviewOrder(body)
+  }
+
+  @Get('history')
+  async getHistory(@User() user: IUser, @Query() query) {
+    const customerId = user.type === 'C' ? user.id : null
+    const branchId = user.type === 'B' ? user.id : null
+
+    return await this.orderService.getHistory({ ...query, customerId, branchId })
+  }
+
+  @Get('detail/:invoiceId')
+  async getOrderDetail(@Param('invoiceId') invoiceId: number, @User() user: IUser) {
+    return await this.orderService.getOrderDetail(invoiceId, user.type === 'C' ? user.id : null)
   }
 }
